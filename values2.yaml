@@ -1,0 +1,4 @@
+type: gpu
+
+deploy_daemonset: true
+deploy_configmap: false

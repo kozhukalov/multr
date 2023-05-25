@@ -1,0 +1,37 @@
+{{- define "multr.daemonset" -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ printf "multr-%s" .Values.type }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "multr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "multr.selectorLabels" . | nindent 8 }}
+    spec:
+      nodeSelector:
+        {{- include "multr.nodeSelector" . | nindent 8 }}
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+              subPath: {{ .Values.type }}
+      volumes:
+        - name: config
+          configMap:
+            name: multr
+
+{{- end }}
+
+{{- if .Values.deploy_daemonset }}
+{{- include "multr.daemonset" . }}
+{{- end }}

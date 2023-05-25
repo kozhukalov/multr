@@ -1,0 +1,4 @@
+type: cpu
+
+deploy_daemonset: true
+deploy_configmap: true
